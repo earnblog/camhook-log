@@ -8,10 +8,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 预解 openssl 冲突
+      - name: 修复 brew openssl 冲突
         run: |
-          brew unlink openssl@1.1 || true
           brew update || true
+          brew install openssl@3 || true
+          brew link --overwrite --force openssl@3 || true
 
       - name: 安装 Theos(用 Xcode 自带工具链)
         run: |
