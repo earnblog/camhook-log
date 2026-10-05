@@ -1,0 +1,9 @@
+Package: com.earnblog.camhook
+Name: CamHook
+Version: 0.0.2
+Architecture: iphoneos-arm64
+Description: 相机回调观测插件（日志版，只读不改）
+Maintainer: earnblog
+Author: earnblog
+Section: Tweaks
+Depends: ellekit
