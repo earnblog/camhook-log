@@ -1,0 +1,34 @@
+name: build-deb
+
+# 在云端 Linux 上用 Theos 交叉编译 rootless .deb,绕开本机 WSL
+on:
+  workflow_dispatch:   # 手动触发(Actions 页面点 Run workflow)
+  push:
+    paths:
+      - 'Tweak.x'
+      - 'Makefile'
+      - 'control'
+      - 'CamHook.plist'
+      - '.github/workflows/build-deb.yml'
+
+jobs:
+  theos-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Theos(含工具链 + iOS SDK)
+        uses: Randomblock1/theos-action@v1
+
+      - name: 编译 rootless .deb
+        run: |
+          make package THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1
+          echo "---- 产物 ----"
+          ls -la packages/
+
+      - name: 上传 .deb 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: camhook-deb
+          path: packages/*.deb
+          if-no-files-found: error
