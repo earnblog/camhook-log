@@ -16,7 +16,7 @@ jobs:
 
       - name: 安装 Theos(用 Xcode 自带工具链)
         run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)" || true
           echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
 
       - name: 补 iOS SDK
@@ -25,6 +25,8 @@ jobs:
 
       - name: 编译 rootless .deb
         run: |
+          export THEOS=$HOME/theos
+          ls "$THEOS/sdks" | head
           make package THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1
           ls -la packages
 
