@@ -42,7 +42,8 @@ static void CamHookShowBanner(void) {
         banner.userInteractionEnabled = NO;
 
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, width - 28, 60)];
-        label.text = @"✓ CamHook 已接管相机回调";
+        // 用运行时字符串，规避该工具链 arm64e 常量字符串指针签名错误导致的 PAC 崩溃
+        label.text = [NSString stringWithUTF8String:"\xE2\x9C\x93 CamHook \xE5\xB7\xB2\xE6\x8E\xA5\xE7\xAE\xA1\xE7\x9B\xB8\xE6\x9C\xBA\xE5\x9B\x9E\xE8\xB0\x83"];
         label.textColor = [UIColor whiteColor];
         label.font = [UIFont boldSystemFontOfSize:16.0];
         label.numberOfLines = 2;
