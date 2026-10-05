@@ -7,17 +7,26 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
+
+      - name: 预解 openssl 冲突
+        run: |
+          brew unlink openssl@1.1 || true
+          brew update || true
+
       - name: 安装 Theos(用 Xcode 自带工具链)
         run: |
           bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
           echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
+
       - name: 补 iOS SDK
         run: |
           git clone --depth 1 https://github.com/theos/sdks.git "$HOME/theos/sdks" || true
+
       - name: 编译 rootless .deb
         run: |
           make package THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1
           ls -la packages
+
       - uses: actions/upload-artifact@v4
         with:
           name: camhook-deb
