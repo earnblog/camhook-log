@@ -17,17 +17,19 @@ static void CamHookShowBanner(void) {
         if (now - gLastBanner < 3.0) return;
         gLastBanner = now;
 
-        // 找当前的 key window
+        // 找当前的 key window（只走 UIWindowScene，避开已弃用的 UIApplication.windows）
         UIWindow *win = nil;
+        UIWindow *anyWin = nil;
         for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
             if ([scene isKindOfClass:[UIWindowScene class]]) {
                 for (UIWindow *w in ((UIWindowScene *)scene).windows) {
+                    if (!anyWin) anyWin = w;
                     if (w.isKeyWindow) { win = w; break; }
                 }
             }
             if (win) break;
         }
-        if (!win) win = UIApplication.sharedApplication.windows.firstObject;
+        if (!win) win = anyWin;
         if (!win) return;
 
         CGFloat width = win.bounds.size.width - 24.0;
